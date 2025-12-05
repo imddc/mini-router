@@ -1,6 +1,6 @@
+import type { App, Ref } from 'vue';
 import { onUnmounted, ref } from 'vue';
-import type { App, Ref } from 'vue'
-import type { IRouter, IRouteConfig, IRouterOptions } from './types.ts';
+import type { IRouteConfig, IRouter, IRouterOptions } from './types.ts';
 
 /**
  * @constant ROUTER_KEY
@@ -81,7 +81,7 @@ class Router implements IRouter {
  * @param {IRouterOptions} options 路由配置
  * @returns {IRouter} 路由实例
  */
-export function createRouter(options: IRouterOptions): IRouter {
+function createRouter(options: IRouterOptions): IRouter {
   // 维护当前路由路径 (基于 Hash 模式)
   const currentRoute = ref<string>(getCurrentHash());
 
@@ -93,4 +93,4 @@ export function createRouter(options: IRouterOptions): IRouter {
 }
 
 // 统一具名导出
-export { Router };
+export { createRouter, Router };
