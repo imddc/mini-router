@@ -1,6 +1,12 @@
+import type { LibRouter } from "../lib/router";
 import { $ } from "../utils/$";
 
-function renderLinks(links: { label: string; path: string }[]) {
+interface LinkProps {
+  links: { label: string, path: string }[],
+  router: LibRouter
+}
+
+function renderLinks({ links, router }: LinkProps) {
   const navContainer = $('.nav-container')!
 
   const ul = document.createElement('ul')
@@ -19,7 +25,7 @@ function renderLinks(links: { label: string; path: string }[]) {
 
     const path = (target as HTMLElement).dataset.path
     if (path) {
-      window.history.pushState(null, '', path)
+      router.push(path)
     }
   })
 }
