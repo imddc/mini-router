@@ -1,149 +1,95 @@
-import { stripBase } from '../location';
-import type {
-  HistoryLocation,
-  HistoryState,
-  NavigationCallback,
-  RouterHistory
-} from '../types';
-import { assign } from '../utils';
-import { normalizeBase, type ValueContainer } from './common';
-
-type PopStateListener = (this: Window, ev: PopStateEvent) => any;
-
-interface StateEntry extends HistoryState {
-  back: HistoryLocation | null;
-  current: HistoryLocation;
-  forward: HistoryLocation | null;
-  position: number;
-  replaced: boolean;
+enum EHistoryMode {
+    Hash = 'hash',
+    History = 'history'
 }
 
-const createBaseLocation = () => location.protocol + '//' + location.host;
+type IListener = (to: string, from: string) => void;
 
-function createHref(base: string, to: HistoryLocation) {
-  return base + to;
+interface ILibHistory {
+    readonly historyMode: EHistoryMode;
+    readonly currentPath: string;
+    push(path: string): void;
+    replace(path: string): void;
+    listen(listener: IListener): () => void;
+}
+
+class LibHistory implements ILibHistory {
+    public readonly historyMode: EHistoryMode = EHistoryMode.History;
+    public _currentPath: string;
+
+    private changeListeners: Set<IListener> = new Set();
+
+    constructor(base?: string) {
+        console.log('base => ', base);
+
+        this._currentPath = this.getCleanPath(window.location.pathname);
+
+        window.addEventListener('popstate', () => {
+            const newPath = this.getCleanPath(window.location.pathname);
+            const fromPath = this._currentPath;
+
+            if (newPath === fromPath) {
+                return;
+            }
+
+            this._currentPath = newPath;
+            this.notifyListeners(newPath, fromPath);
+        });
+    }
+
+    public get currentPath(): string {
+        return this._currentPath;
+    }
+
+    public getCleanPath(path: string): string {
+        return path.replace(/\/$/, '') || '/';
+    }
+
+    private notifyListeners(to: string, from: string) {
+        this.changeListeners.forEach((listener) => {
+            listener(to, from);
+        });
+    }
+
+    public push(path: string): void {
+        const fromPath = this._currentPath;
+        const toPath = this.getCleanPath(path);
+
+        if (toPath !== fromPath) {
+            window.history.pushState({}, '', toPath);
+            this._currentPath = toPath;
+            this.notifyListeners(toPath, fromPath);
+        }
+    }
+
+    public replace(path: string): void {
+        const fromPath = this._currentPath;
+        const toPath = this.getCleanPath(path);
+
+        if (toPath !== fromPath) {
+            window.history.replaceState({}, '', toPath);
+            this._currentPath = toPath;
+            this.notifyListeners(toPath, fromPath);
+        }
+    }
+
+    public listen(listener: IListener) {
+        this.changeListeners.add(listener);
+
+        return (): void => {
+            this.changeListeners.delete(listener);
+        };
+    }
 }
 
 /**
- * 从 window.location 对象创建一个标准化的 history location
  *
- * @param base - 路由的基础路径
- * @param location {Location} - window.location 对象
- * @returns 标准化的 history location 字符串
+ * @param base - 路由基础路径
+ * @returns 新的 LibHistory 实例
+ * todo 未来会改
  */
-function createCurrentLocation(base: string, location: Location) {
-  // 解构出 location 中的 pathname、search 和 hash
-  const { pathname, search, hash } = location;
-
-  // 检查 base 中是否包含 '#'，用于判断是否存在 hash 模式
-  const hashPos = base.indexOf('#');
-
-  if (hashPos > -1) {
-    // 如果 hash 中包含 base 的 hash 部分，则 slicePos 为 base 的 hash 长度，否则为 1
-    const slicePos = hash.includes(base.slice(hashPos))
-      ? base.slice(hashPos).length
-      : 1;
-    // 从 hash 中提取路径部分
-    let pathFromHash = hash.slice(slicePos);
-    // 如果提取出的路径以 '/' 开头，则确保前面只有一个 '/'
-    if (pathFromHash[0] === '/') {
-      pathFromHash = '/' + pathFromHash;
-    }
-    // 返回去除 base 后的路径
-    return stripBase(pathFromHash, '');
-  }
-  // 如果 base 中不包含 '#'，则直接拼接 pathname（去除 base）、search 和 hash
-  const path = stripBase(pathname, base);
-  return path + search + hash;
+function createWebHistory(base?: string): LibHistory {
+    return new LibHistory(base);
 }
 
-function useHistoryStateNavigation(base: string) {
-  const state = {
-    value: {
-      back: null,
-      current: '',
-      forward: null,
-      position: 0,
-      replaced: false,
-    }
-  }
-
-  const location = {
-    value: ''
-  }
-
-  const replace = (to: HistoryLocation, state?: HistoryState) => {
-    history.replaceState(state, '', createHref(base, to));
-  }
-
-
-  return {
-    state,
-    location,
-    replace
-  }
-}
-
-function useHistoryListeners(
-  base: string,
-  historyState: ValueContainer<StateEntry>,
-  currentLocation: ValueContainer<HistoryLocation>,
-  replace: RouterHistory['replace']
-) {
-
-  function pauseListeners() {
-
-  }
-
-  return {
-    pauseListeners
-  }
-}
-
-/**
- * 创建一个 HTML5 历史记录对象，用于单页应用程序的路由导航。
- *
- * @param base - 路由的基础路径
- */
-function createWebHistory(base?: string): RouterHistory {
-  base = normalizeBase(base);
-
-  const historyNavigation = useHistoryStateNavigation(base);
-  const historyListeners = useHistoryListeners(
-    base,
-    historyNavigation.state,
-    historyNavigation.location,
-    historyNavigation.replace
-  );
-
-  function go(delta: number, triggerListeners = true) {
-    if (!triggerListeners) historyListeners.pauseListeners();
-    history.go(delta);
-  }
-
-  const routerHistory: RouterHistory = assign(
-    {
-      // it's overridden right after
-      location: '',
-      base,
-      go,
-    },
-
-    historyNavigation,
-    historyListeners
-  );
-
-  Object.defineProperty(routerHistory, 'location', {
-    enumerable: true,
-    get: () => historyNavigation.location.value
-  });
-
-  Object.defineProperty(routerHistory, 'state', {
-    enumerable: true,
-    get: () => historyNavigation.state.value
-  });
-
-  return routerHistory;
-}
-
-export { createWebHistory };
+export { EHistoryMode, type IListener, type ILibHistory, LibHistory, createWebHistory };
