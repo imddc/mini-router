@@ -1,96 +1,71 @@
 import type { App, Ref } from 'vue';
-import { onUnmounted, ref } from 'vue';
-import type { IRouteConfig, IRouter, IRouterOptions } from './types.ts';
+import { inject, provide, readonly, ref } from 'vue';
+import RouterLink from './components/RouterLink';
+import RouterView from './components/RouterView';
+import { ROUTER_KEY } from './history/common';
+import type { ILibHistory } from './history/html5';
+import type { IRouteConfig, IRouteRecord, IRouter, IRouterOptions } from './types';
 
-/**
- * @constant ROUTER_KEY
- * 路由注册的 Symbol Key，用于 provide/inject
- */
-export const ROUTER_KEY = Symbol('router');
+class LibRouter implements IRouter {
+    options: IRouterOptions;
+    public currentRoute: Ref<IRouteRecord | null> = ref(null);
+    public routes: IRouteConfig[];
+    private history: ILibHistory;
 
-/**
- * @function getCurrentHash
- * 获取当前 URL 中的 Hash 路径
- * @returns {string} 路由路径 (例如: '/home')
- */
-const getCurrentHash = (): string => {
-  // 假设在 JSDOM 或 Node 环境下 window.location 可能不存在
-  if (typeof window === 'undefined') return '/';
-  // 去除 # 符号，并确保至少返回 '/'
-  return window.location.hash.slice(1) || '/';
-};
+    constructor(options: IRouterOptions) {
+        this.options = options;
+        this.routes = options.routes;
+        this.history = options.history;
 
-/**
- * @class Router
- * 路由状态管理器和 API 实现
- */
-class Router implements IRouter {
-  public currentRoute: Ref<string>;
-  public routes: IRouteConfig[];
-  private hashChangeHandler: () => void;
+        this.history.listen((to, from) => {
+            const target = this.matchRoute(to);
+            this.currentRoute.value = target;
 
-  /**
-   * @param {Ref<string>} currentRoute 当前路由路径
-   * @param {IRouteConfig[]} routes 路由配置数组
-   */
-  constructor(currentRoute: Ref<string>, routes: IRouteConfig[]) {
-    this.currentRoute = currentRoute;
-    this.routes = routes;
+            console.log(`[mini-router] Navigated from ${from} to ${to}`);
+            console.log('Matched Route Record', target);
+        });
 
-    this.hashChangeHandler = (): void => {
-      this.currentRoute.value = getCurrentHash();
-    };
-  }
-
-  /**
-   * @function push
-   * 导航到新路径 (Hash 模式)
-   * @param {string} path 目标路径
-   */
-  public push(path: string): void {
-    if (typeof window !== 'undefined') {
-      window.location.hash = path;
-    }
-  }
-
-  /**
-   * @function install
-   * 供 Vue 应用使用的安装方法
-   * @param {App} app Vue 应用实例
-   */
-  public install(app: App): void {
-    if (typeof window !== 'undefined') {
-      window.addEventListener('hashchange', this.hashChangeHandler);
+        const initialPath = this.history.currentPath;
+        this.currentRoute.value = this.matchRoute(initialPath);
     }
 
-    // 确保在应用卸载时移除事件监听器
-    onUnmounted(() => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('hashchange', this.hashChangeHandler);
-      }
-    });
+    /**
+     * @description 匹配路由记录
+     * @param path 路由路径
+     * @returns 匹配的路由记录
+     */
+    private matchRoute(path: string) {
+        const matchedPath = this.routes.find((record) => record.path === path) ?? null;
+        return matchedPath;
+    }
 
-    // 将路由实例提供 (provide) 给所有组件
-    app.provide(ROUTER_KEY, this);
-  }
+    push(path: string): void {
+        this.history.push(path);
+    }
+
+    replace(path: string): void {
+        this.history.replace(path);
+    }
+
+    getRoutes() {
+        return this.routes;
+    }
+
+    install(app: App): void {
+        // 1. 提供全局的 $router
+        app.config.globalProperties.$router = this;
+        // 2. 提供全局的 $route 只读
+        app.config.globalProperties.$route = readonly(this.currentRoute);
+        // 3. 提供 router 实例
+        app.provide(ROUTER_KEY, this);
+        // todo 4. 提供全局组件
+        app.component('RouterView', RouterView);
+        app.component('RouterLink', RouterLink);
+    }
 }
 
-/**
- * @function createRouter
- * 创建 Mini Vue Router 实例
- * @param {IRouterOptions} options 路由配置
- * @returns {IRouter} 路由实例
- */
-function createRouter(options: IRouterOptions): IRouter {
-  // 维护当前路由路径 (基于 Hash 模式)
-  const currentRoute = ref<string>(getCurrentHash());
-
-  // 创建路由实例
-  const router = new Router(currentRoute, options.routes);
-
-  // 统一具名导出
-  return router;
+function createRouter(options: IRouterOptions) {
+    return new LibRouter(options);
 }
 
-// 统一具名导出
-export { createRouter, Router };
+export { LibRouter, createRouter };

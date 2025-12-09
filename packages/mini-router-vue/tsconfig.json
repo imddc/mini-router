@@ -1,12 +1,15 @@
 {
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "composite": true,
-    "declaration": true,
-    "declarationMap": true,
-    "outDir": "dist",
-    "noImplicitAny": false
-  },
-  "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.test.ts"] // 排除测试文件
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "outDir": "dist",
+        "noImplicitAny": false,
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "isolatedDeclarations": false
+    },
+    "include": ["src/**/*.ts", "src/components/RouterLink.ts"],
+    "exclude": ["src/**/*.test.ts"] // 排除测试文件
 }

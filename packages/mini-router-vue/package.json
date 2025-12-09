@@ -1,0 +1,30 @@
+{
+    "name": "mini-router-vue",
+    "version": "1.0.0",
+    "description": "A miniature Vue Router implementation.",
+    "type": "module",
+    "main": "./dist/mini-vue-router.umd.cjs",
+    "module": "./dist/mini-vue-router.js",
+    "exports": {
+        ".": {
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.cjs"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "types": "./dist/index.d.mts",
+    "scripts": {
+        "build": "tsdown",
+        "build:watch": "tsdown --watch",
+        "test": "vitest"
+    },
+    "peerDependencies": {
+        "vue": "^3.5.0"
+    },
+    "devDependencies": {
+        "tsdown": "^0.17.2",
+        "typescript": "catalog:"
+    }
+}
