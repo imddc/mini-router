@@ -1,45 +1,93 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git",
-    "useIgnoreFile": true
-  },
-  "files": {
-    "ignoreUnknown": false
-  },
-  "formatter": {
-    "enabled": true,
-    "indentStyle": "space"
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "suspicious": {
-        "noExplicitAny": "off"
-      },
-      "style": {
-        "useTemplate": "off",
-        "noNonNullAssertion": "off"
-      }
+    "$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
+    "html": {
+        "experimentalFullSupportEnabled": true,
+        "formatter": {
+            "enabled": true,
+            "indentScriptAndStyle": true
+        }
     },
-    "domains": {
-      "vue": "recommended"
-    }
-  },
-  "javascript": {
+    "assist": {
+        "actions": {
+            "source": {
+                "recommended": true
+            }
+        },
+        "enabled": true
+    },
+    "files": {
+        "ignoreUnknown": false
+    },
     "formatter": {
-      "quoteStyle": "single",
-      "trailingCommas": "none"
+        "bracketSameLine": true,
+        "enabled": true,
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineWidth": 120
+    },
+    "javascript": {
+        "formatter": {
+            "indentWidth": 4,
+            "quoteStyle": "single",
+            "trailingCommas": "none"
+        }
+    },
+    "css": {
+        "formatter": {
+            "enabled": true,
+            "indentWidth": 4,
+            "quoteStyle": "single"
+        },
+        "parser": {
+            "tailwindDirectives": true
+        }
+    },
+    "linter": {
+        "domains": {
+            "vue": "recommended"
+        },
+        "enabled": true,
+        "rules": {
+            "recommended": true,
+            "style": {
+                "noNonNullAssertion": "off",
+                "useTemplate": "off"
+            },
+            "suspicious": {
+                "noExplicitAny": "off"
+            }
+        }
+    },
+    "overrides": [
+        {
+            "includes": ["**/*.vue"],
+            "linter": {
+                "rules": {
+                    "style": {
+                        "useConst": "off",
+                        "useImportType": "off"
+                    },
+                    "correctness": {
+                        "noUnusedVariables": "off",
+                        "noUnusedImports": "off"
+                    }
+                }
+            }
+        },
+        {
+            "includes": ["**/src/style.css"],
+            "linter": {
+                "rules": {
+                    "correctness": {
+                        "noUnknownProperty": "off"
+                    }
+                }
+            }
+        }
+    ],
+    "vcs": {
+        "clientKind": "git",
+        "enabled": true,
+        "useIgnoreFile": true
     }
-  },
-  "assist": {
-    "enabled": true,
-    "actions": {
-      "source": {
-        "organizeImports": "on"
-      }
-    }
-  }
 }
