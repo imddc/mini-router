@@ -1,19 +1,25 @@
 {
-	"name": "mini-router",
-	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
-	"scripts": {},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"packageManager": "pnpm@10.20.0",
-	"dependencies": {
-		"vite": "^7.2.6",
-		"vue": "^3.5.25"
-	},
-	"devDependencies": {
-		"@types/node": "^24.10.1",
-		"typescript": "^5.9.3"
-	}
+    "name": "mini-router",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {},
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "packageManager": "pnpm@10.20.0",
+    "dependencies": {
+        "vite": "^7.2.6",
+        "vue": "^3.5.25"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "^2.3.8",
+        "@types/node": "^24.10.1",
+        "typescript": "^5.9.3"
+    },
+    "pnpm": {
+        "overrides": {
+            "vite": "npm:rolldown-vite@7.2.5"
+        }
+    }
 }
