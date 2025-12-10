@@ -2,7 +2,7 @@
 
 ## 官方api
 
-1. createRouter
+1. [x] createRouter
 
 2. createWebHistory
 
@@ -51,15 +51,15 @@
    6. clearRoutes
    7. currentRoute
    8. forward
-   9.  getRoutes
+   9. [x] getRoutes
    10. go
    11. hashRoute
-   12. install
+   12. [x] install
    13. isReady
    14. listening
    15. onError
    16. options
-   17. push
+   17. [x] push
    18. removeRoute
-   19. replace
+   19. [x] replace
    20. resolve
