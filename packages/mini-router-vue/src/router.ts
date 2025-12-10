@@ -1,5 +1,5 @@
 import type { App, Ref } from 'vue';
-import { readonly, ref } from 'vue';
+import { readonly, shallowRef } from 'vue';
 import { RouterLink } from './components/RouterLink';
 import { RouterView } from './components/RouterView';
 import { ROUTER_KEY } from './history/common';
@@ -8,7 +8,7 @@ import type { IRouteConfig, IRouteRecord, IRouter, IRouterOptions } from './type
 
 class LibRouter implements IRouter {
     options: IRouterOptions;
-    public currentRoute: Ref<IRouteRecord | null> = ref(null);
+    public currentRoute: Ref<IRouteRecord | null> = shallowRef(null);
     public routes: IRouteConfig[];
     private history: ILibHistory;
 
