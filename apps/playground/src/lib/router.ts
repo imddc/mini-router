@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'mini-router-vue';
 import type { App } from 'vue';
-import AboutPage from '@/pages/about.vue';
+import AboutDetailPage from '@/pages/about/detail.vue';
+import AboutPage from '@/pages/about/index.vue';
+import ContactPage from '@/pages/contact.vue';
 import IndexPage from '@/pages/index.vue';
 
 const router = createRouter({
@@ -13,6 +15,14 @@ const router = createRouter({
         {
             path: '/about',
             component: AboutPage
+        },
+        {
+            path: '/about/detail',
+            component: AboutDetailPage
+        },
+        {
+            path: '/contact/:id/me',
+            component: ContactPage
         }
     ]
 });

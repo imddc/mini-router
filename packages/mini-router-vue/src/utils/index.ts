@@ -1,8 +1,6 @@
 /**
  * 浅拷贝对象
  */
-const assign = Object.assign
+const assign = Object.assign;
 
-export {
-  assign
-}
+export { assign };

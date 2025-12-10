@@ -22,6 +22,11 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'mini-router-vue';
+
+const router = useRouter()
+
+console.log(router.routeRecords)
 
 const links = [
     {
@@ -31,6 +36,14 @@ const links = [
     {
         path: '/about',
         label: 'about'
+    },
+    {
+        path: '/about/detail',
+        label: 'about detail'
+    },
+    {
+        path: '/contact/123/me?a=1&b=2#hhh',
+        label: 'contact'
     }
 ];
 </script>
