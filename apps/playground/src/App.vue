@@ -1,16 +1,19 @@
 <template>
-    <div>
+    <div class="container mx-auto">
         <header>
             <nav>
-                <ul>
-                    <li v-for="link in links" :key="link.path">
+                <ul class="tabs tabs-lift tabs-xs">
+                    <li v-for="link in links" :key="link.path" class="tab">
                         <router-link :to="link.path">{{ link.label }}</router-link>
                     </li>
                 </ul>
             </nav>
         </header>
 
-        <router-view />
+        <router-view v-slot="{ Component }">
+            <component :is="Component" />
+        </router-view>
+        123
     </div>
 </template>
 
