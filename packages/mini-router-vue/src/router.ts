@@ -1,7 +1,7 @@
 import type { App, Ref } from 'vue';
-import { inject, provide, readonly, ref } from 'vue';
-import RouterLink from './components/RouterLink';
-import RouterView from './components/RouterView';
+import { readonly, ref } from 'vue';
+import { RouterLink } from './components/RouterLink';
+import { RouterView } from './components/RouterView';
 import { ROUTER_KEY } from './history/common';
 import type { ILibHistory } from './history/html5';
 import type { IRouteConfig, IRouteRecord, IRouter, IRouterOptions } from './types';
