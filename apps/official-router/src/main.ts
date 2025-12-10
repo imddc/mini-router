@@ -1,9 +1,23 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
+import { createApp } from 'vue';
+import { createRouter, createWebHistory } from 'vue-router';
+import App from './App.vue';
 
-const app = createApp(App)
+const app = createApp(App);
 
-app.use(router)
+export const router = createRouter({
+    history: createWebHistory(import.meta.env.BASE_URL),
+    routes: [
+        { path: '/', component: () => import('./pages/index.vue') },
+        { path: '/about', component: () => import('./pages/about.vue') }
+    ]
+});
 
-app.mount('#app')
+router.beforeEach((to, from) => {
+    console.log('beforeEach', to, from);
+});
+
+console.log('router currentRoute => ', router.currentRoute);
+
+app.use(router);
+
+app.mount('#app');
