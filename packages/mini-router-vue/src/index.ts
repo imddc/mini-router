@@ -5,3 +5,5 @@ export { RouterView } from './components/RouterView';
 
 export * from './history';
 export * from './router';
+
+export * from './useApi';
