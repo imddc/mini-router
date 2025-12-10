@@ -1,11 +1,13 @@
+import type { InjectionKey } from 'vue';
 import { removeTrailingSlash } from '../location';
+import type { IRouter } from '../types';
 import { isBrowser } from '../utils/env';
 
 type HistoryLocation = string;
 
 type ValueContainer<T> = { value: T };
 
-const ROUTER_KEY = Symbol.for('MINI_ROUTER_VUE_KEY');
+const ROUTER_KEY = Symbol.for('MINI_ROUTER_VUE_KEY') as InjectionKey<IRouter>;
 
 function normalizeBase(base?: string): string {
     if (!base) {
