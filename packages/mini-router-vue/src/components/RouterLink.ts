@@ -7,7 +7,10 @@ const RouterLink = defineComponent(
         const router = inject(ROUTER_KEY);
 
         const activeClass = props.activeClass;
-        const isActive = computed(() => router?.currentRoute.value?.path === props.to);
+        const isActive = computed(() => {
+            const toPath = new URL(props.to, window.location.href).pathname;
+            return router?.currentRoute.value?.path === toPath;
+        });
 
         if (!router) {
             warn('请确保 mini-router-vue 已安装');
