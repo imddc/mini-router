@@ -1,30 +1,22 @@
-import { computed, defineComponent, h, inject, watchEffect } from 'vue';
+import { computed, defineComponent, h, inject, type Slot } from 'vue';
 import { ROUTER_KEY } from '../history/common';
 
-const RouterView = defineComponent(
-    (_, { slots }) => {
-        const router = inject(ROUTER_KEY);
-        if (!router) {
-            console.error('RouterView 组件必须在 Router 组件内部使用');
-            return () => h('template', {}, []);
-        }
+function normalizeSlot(slot: Slot | undefined, data: any) {
+    if (!slot) return null;
+    const slotContent = slot(data);
+    return slotContent.length === 1 ? slotContent[0] : slotContent;
+}
 
-        const currentRoute = computed(() => router.currentRoute.value);
-
-        watchEffect(() => {
-            console.log('currentRoute.value?.component => ', currentRoute.value?.component);
-        });
-
-        return () => {
-            return slots.default?.({
-                Component: currentRoute.value?.component
-            });
-        };
-    },
-    {
-        props: {},
-        slots: {}
+const RouterView = defineComponent((_, { slots }) => {
+    const router = inject(ROUTER_KEY);
+    if (!router) {
+        console.error('RouterView 组件必须在 Router 组件内部使用');
+        return () => h('template', {}, []);
     }
-);
+
+    const currentRoute = computed(() => router.currentRoute.value);
+
+    return () => normalizeSlot(slots.default, { Component: currentRoute.value?.component });
+});
 
 export { RouterView };

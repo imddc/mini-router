@@ -13,7 +13,6 @@
         <router-view v-slot="{ Component }">
             <component :is="Component" />
         </router-view>
-        123
     </div>
 </template>
 
