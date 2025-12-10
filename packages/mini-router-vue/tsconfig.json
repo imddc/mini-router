@@ -10,6 +10,6 @@
         "moduleResolution": "bundler",
         "isolatedDeclarations": false
     },
-    "include": ["src/**/*.ts", "src/components/RouterLink.ts"],
+    "include": ["src/**/*.ts", "src/components/RouterLink/index.ts"],
     "exclude": ["src/**/*.test.ts"] // 排除测试文件
 }

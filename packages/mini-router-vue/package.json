@@ -3,16 +3,18 @@
     "version": "1.0.0",
     "description": "A miniature Vue Router implementation.",
     "type": "module",
-    "main": "./dist/mini-vue-router.umd.cjs",
+    "main": "./dist/mini-vue-router.js",
     "module": "./dist/mini-vue-router.js",
     "exports": {
         ".": {
             "import": "./dist/index.mjs",
             "require": "./dist/index.cjs"
-        }
+        },
+        "./style.css": "./src/style.css"
     },
     "files": [
-        "dist"
+        "dist",
+        "src/style.css"
     ],
     "types": "./dist/index.d.mts",
     "scripts": {
