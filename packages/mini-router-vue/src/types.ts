@@ -13,6 +13,22 @@ export interface IRouteRecord {
 }
 
 /**
+ * @interface IRouteNormalizedRouteRecord
+ * 标准化路由记录接口
+ */
+export interface IRouteNormalizedRouteRecord {
+    fullPath: string;
+    hash: string;
+    matched: string[];
+    meta: Record<string, any>;
+    name?: string;
+    params: Record<string, string>;
+    path: string;
+    query: Record<string, string>;
+    redirectedFrom?: string;
+}
+
+/**
  * @interface IRouteConfig
  * 路由配置接口
  */
@@ -40,7 +56,7 @@ export interface IRouterOptions {
  */
 export interface IRouter {
     /** 当前激活的路由路径 (响应式) */
-    currentRoute: Ref<IRouteRecord | null>;
+    currentRoute: Ref<IRouteNormalizedRouteRecord | null>;
     /** 注册的路由配置 */
     routes: IRouteConfig[];
     /** 编程式导航方法 */

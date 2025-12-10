@@ -4,11 +4,11 @@ import { RouterLink } from './components/RouterLink';
 import { RouterView } from './components/RouterView';
 import { ROUTER_KEY } from './history/common';
 import type { ILibHistory } from './history/html5';
-import type { IRouteConfig, IRouteRecord, IRouter, IRouterOptions } from './types';
+import type { IRouteConfig, IRouteNormalizedRouteRecord, IRouter, IRouterOptions } from './types';
 
 class LibRouter implements IRouter {
     options: IRouterOptions;
-    public currentRoute: Ref<IRouteRecord | null> = shallowRef(null);
+    public currentRoute: Ref<IRouteNormalizedRouteRecord | null> = shallowRef(null);
     public routes: IRouteConfig[];
     private history: ILibHistory;
 
@@ -30,13 +30,16 @@ class LibRouter implements IRouter {
     }
 
     /**
+     * todo:  将路由组信息和解析后的path信息组合
      * @description 匹配路由记录
      * @param path 路由路径
      * @returns 匹配的路由记录
      */
-    private matchRoute(path: string) {
+    private matchRoute(path: string): IRouteNormalizedRouteRecord | null {
         const matchedPath = this.routes.find((record) => record.path === path) ?? null;
-        return matchedPath;
+        const result = { ...matchedPath } as IRouteNormalizedRouteRecord;
+
+        return result;
     }
 
     push(path: string): void {
