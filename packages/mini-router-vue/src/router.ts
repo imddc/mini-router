@@ -4,12 +4,12 @@ import { RouterLink } from './components/RouterLink';
 import { RouterView } from './components/RouterView';
 import { ROUTER_KEY } from './history/common';
 import type { ILibHistory } from './history/html5';
-import type { IRouteConfig, IRouteNormalizedRouteRecord, IRouter, IRouterOptions } from './types';
+import type { IRouteNormalizedRouteRecord, IRouteRecord, IRouter, IRouterOptions } from './types';
 
 class LibRouter implements IRouter {
     options: IRouterOptions;
     public currentRoute: Ref<IRouteNormalizedRouteRecord | null> = shallowRef(null);
-    public routes: IRouteConfig[];
+    public routes: IRouteRecord[];
     private history: ILibHistory;
 
     constructor(options: IRouterOptions) {

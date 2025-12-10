@@ -29,25 +29,12 @@ export interface IRouteNormalizedRouteRecord {
 }
 
 /**
- * @interface IRouteConfig
- * 路由配置接口
- */
-export interface IRouteConfig {
-    /** 路由路径，例如 '/' 或 '/about' */
-    path: string;
-    /** 匹配路径后渲染的组件 */
-    component: Component;
-    /** 路由名称，可选 */
-    name?: string;
-}
-
-/**
  * @interface IRouterOptions
  * 创建路由实例的选项
  */
 export interface IRouterOptions {
     history: ILibHistory;
-    routes: IRouteConfig[];
+    routes: IRouteRecord[];
 }
 
 /**
@@ -58,7 +45,7 @@ export interface IRouter {
     /** 当前激活的路由路径 (响应式) */
     currentRoute: Ref<IRouteNormalizedRouteRecord | null>;
     /** 注册的路由配置 */
-    routes: IRouteConfig[];
+    routes: IRouteRecord[];
     /** 编程式导航方法 */
     push(path: string): void;
     /** 编程式导航方法 */
