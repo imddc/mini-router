@@ -99,3 +99,7 @@ export enum ENavigationDirection {
     forward = 'forward',
     unknown = ''
 }
+
+// 路由守卫部分
+export type INavigationGuardNext = (value?: boolean | string | IRouteLocation | Error) => void;
+export type INavigationGuard = (to: IRouteLocation, from: IRouteLocation | null, next: INavigationGuardNext) => void;
