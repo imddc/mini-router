@@ -27,5 +27,8 @@
     "devDependencies": {
         "tsdown": "^0.17.2",
         "typescript": "catalog:"
+    },
+    "dependencies": {
+        "path-to-regexp": "^8.3.0"
     }
 }

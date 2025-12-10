@@ -82,6 +82,9 @@ importers:
       mini-router-vue:
         specifier: workspace:*
         version: link:../../packages/mini-router-vue
+      path-to-regexp:
+        specifier: ^8.3.0
+        version: 8.3.0
       tailwindcss:
         specifier: ^4.1.17
         version: 4.1.17
@@ -92,6 +95,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.1
+      '@types/path-to-regexp':
+        specifier: ^1.7.0
+        version: 1.7.0
       '@vitejs/plugin-vue':
         specifier: ^6.0.1
         version: 6.0.2(rolldown-vite@7.2.5(@types/node@24.10.1)(esbuild@0.25.12)(jiti@2.6.1))(vue@3.5.25(typescript@5.9.3))
@@ -113,6 +119,9 @@ importers:
 
   packages/mini-router-vue:
     dependencies:
+      path-to-regexp:
+        specifier: ^8.3.0
+        version: 8.3.0
       vue:
         specifier: ^3.5.0
         version: 3.5.25(typescript@5.9.3)
@@ -810,6 +819,10 @@ packages:
   '@types/node@24.10.1':
     resolution: {integrity: sha512-GNWcUTRBgIRJD5zj+Tq0fKOJ5XZajIiBroOF0yvj2bSU1WvNdYS/dn9UxwsujGW4JX06dnHyjV2y9rRaybH0iQ==}
 
+  '@types/path-to-regexp@1.7.0':
+    resolution: {integrity: sha512-ruXmJ/6LwB5L3mxUG2z3Ovi85vH9IVubXq+S9RArvMbjhbCnSLpXs0LrHQg3f0y2tKvXhWUNv7iQDySDfHSTDw==}
+    deprecated: This is a stub types definition for path-to-regexp (https://github.com/pillarjs/path-to-regexp). path-to-regexp provides its own type definitions, so you don't need @types/path-to-regexp installed!
+
   '@vitejs/plugin-vue@6.0.2':
     resolution: {integrity: sha512-iHmwV3QcVGGvSC1BG5bZ4z6iwa1SOpAPWmnjOErd4Ske+lZua5K9TtAVdx0gMBClJ28DViCbSmZitjWZsWO3LA==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -1241,6 +1254,9 @@ packages:
   path-key@3.1.1:
     resolution: {integrity: sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==}
     engines: {node: '>=8'}
+
+  path-to-regexp@8.3.0:
+    resolution: {integrity: sha512-7jdwVIRtsP8MYpdXSwOS0YdD0Du+qOoF/AEPIt88PcCFrZCzx41oxku1jD88hZBwbNUIEfpqvuhjFaMAqMTWnA==}
 
   pathe@2.0.3:
     resolution: {integrity: sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w==}
@@ -2067,6 +2083,10 @@ snapshots:
     dependencies:
       undici-types: 7.16.0
 
+  '@types/path-to-regexp@1.7.0':
+    dependencies:
+      path-to-regexp: 8.3.0
+
   '@vitejs/plugin-vue@6.0.2(rolldown-vite@7.2.5(@types/node@24.10.1)(esbuild@0.25.12)(jiti@2.6.1))(vue@3.5.25(typescript@5.9.3))':
     dependencies:
       '@rolldown/pluginutils': 1.0.0-beta.50
@@ -2473,6 +2493,8 @@ snapshots:
   path-browserify@1.0.1: {}
 
   path-key@3.1.1: {}
+
+  path-to-regexp@8.3.0: {}
 
   pathe@2.0.3: {}
 
