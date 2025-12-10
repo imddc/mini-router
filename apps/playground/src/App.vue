@@ -10,9 +10,21 @@
             </nav>
         </header>
 
-        <router-view v-slot="{ Component }">
-            <component :is="Component" />
-        </router-view>
+        <section class="rounded-md bg-gray-200">
+            <h2>
+                render 1
+            </h2>
+            <router-view v-slot="{ Component }">
+                <component :is="Component" />
+            </router-view>
+        </section>
+
+        <section class="rounded-md bg-gray-200 mt-4">
+            <h2>
+                render 2 empty
+            </h2>
+            <router-view></router-view>
+        </section>
     </div>
 </template>
 
