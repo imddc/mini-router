@@ -7,8 +7,7 @@
     "module": "./dist/mini-vue-router.js",
     "exports": {
         ".": {
-            "import": "./dist/index.mjs",
-            "require": "./dist/index.cjs"
+            "import": "./dist/index.mjs"
         },
         "./style.css": "./src/style.css"
     },
