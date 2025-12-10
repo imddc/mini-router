@@ -27,6 +27,17 @@ const router = createRouter({
     ]
 });
 
+router.beforeEach((to, from, next) => {
+    console.log('beforeEach 1 => ', to, from);
+    // if (1) {
+    //     router.replace('/');
+    //     next();
+    //     return;
+    // }
+
+    next();
+});
+
 function setupRouter(app: App) {
     app.use(router);
 }
