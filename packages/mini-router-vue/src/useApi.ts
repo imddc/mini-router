@@ -19,6 +19,8 @@ function useRouter(): IRouter {
  * 获取当前路由实例
  */
 function useRoute() {
+    // todo: route 可能为 null
+    // todo: route 在初始化时，没有运行时数据，如query，hash等
     const router = inject<IRouter>(ROUTER_KEY);
     if (!router) {
         throw new Error('useRoute 必须在安装路由后，在组件的 setup 函数中调用。');
