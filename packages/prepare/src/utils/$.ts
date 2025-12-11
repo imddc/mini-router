@@ -1,7 +1,5 @@
 function $(selector: string) {
-  return document.querySelector(selector)
+    return document.querySelector(selector);
 }
 
-export {
-  $
-}
+export { $ };

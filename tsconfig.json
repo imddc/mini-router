@@ -1,21 +1,21 @@
 {
-	"compilerOptions": {
-		/* Base Options */
-		"target": "ES2020",
-		"module": "NodeNext",
-		"moduleResolution": "NodeNext",
-		"strict": true,
-		"esModuleInterop": true,
-		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true,
-		"resolveJsonModule": true,
-		"isolatedModules": true,
-		"useDefineForClassFields": true
-	},
-	"files": [],
-	"references": [
-		// 引用两个子包的 tsconfig
-		{ "path": "./packages/mini-router-vue" }
-		// { "path": "./packages/playground" }
-	]
+    "compilerOptions": {
+        /* Base Options */
+        "target": "ES2020",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "useDefineForClassFields": true
+    },
+    "files": [],
+    "references": [
+        // 引用两个子包的 tsconfig
+        { "path": "./packages/mini-router-vue" }
+        // { "path": "./packages/playground" }
+    ]
 }

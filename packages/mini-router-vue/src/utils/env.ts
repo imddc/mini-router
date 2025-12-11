@@ -1,5 +1,3 @@
-const isBrowser = typeof document !== 'undefined'
+const isBrowser = typeof document !== 'undefined';
 
-export {
-  isBrowser
-}
+export { isBrowser };

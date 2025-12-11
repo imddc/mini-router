@@ -19,30 +19,30 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'mini-router-vue';
+    import { useRouter } from 'mini-router-vue';
 
-const router = useRouter()
+    const router = useRouter();
 
-console.log('router records => ', router.routeRecords)
+    console.log('router records => ', router.routeRecords);
 
-console.log('current router', router.currentRoute)
+    console.log('current router', router.currentRoute);
 
-const links = [
-    {
-        path: '/',
-        label: 'index'
-    },
-    {
-        path: '/about',
-        label: 'about'
-    },
-    {
-        path: '/about/detail',
-        label: 'about detail'
-    },
-    {
-        path: '/contact/123/me?a=1&b=2#hhh',
-        label: 'contact'
-    }
-];
+    const links = [
+        {
+            path: '/',
+            label: 'index'
+        },
+        {
+            path: '/about',
+            label: 'about'
+        },
+        {
+            path: '/about/detail',
+            label: 'about detail'
+        },
+        {
+            path: '/contact/123/me?a=1&b=2#hhh',
+            label: 'contact'
+        }
+    ];
 </script>

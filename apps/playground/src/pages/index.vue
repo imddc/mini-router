@@ -3,10 +3,10 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'mini-router-vue';
+    import { useRouter } from 'mini-router-vue';
 
-const router = useRouter()
-console.log(router)
+    const router = useRouter();
+    console.log(router);
 </script>
 
 <style scoped></style>

@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import { getCurrentInstance } from 'vue';
-import { useRouter } from 'vue-router'
-import { router } from './main';
+    import { getCurrentInstance } from 'vue';
+    import { useRouter } from 'vue-router';
+    import { router } from './main';
 
-const ins = getCurrentInstance()
-const routerHook = useRouter()
+    const ins = getCurrentInstance();
+    const routerHook = useRouter();
 
-console.log('routerHook same as router', routerHook === router, router === ins?.proxy?.$router)
+    console.log('routerHook same as router', routerHook === router, router === ins?.proxy?.$router);
 
-const links = [
-    {
-        path: '/',
-        label: 'index'
-    },
-    {
-        path: '/about',
-        label: 'about'
-    }
-];
+    const links = [
+        {
+            path: '/',
+            label: 'index'
+        },
+        {
+            path: '/about',
+            label: 'about'
+        }
+    ];
 </script>
 
 <template>
