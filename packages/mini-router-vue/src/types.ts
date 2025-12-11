@@ -100,6 +100,28 @@ export enum ENavigationDirection {
     unknown = ''
 }
 
-// 路由守卫部分
+/**
+ * 守卫的next函数的类型
+ * 用于在守卫函数中继续导航流程或触发错误或重定向处理
+ */
 export type INavigationGuardNext = (value?: boolean | string | IRouteLocation | Error) => void;
-export type INavigationGuard = (to: IRouteLocation, from: IRouteLocation | null, next: INavigationGuardNext) => void;
+
+/**
+ * 导航守卫返回值类型
+ * 可以返回 undefined、boolean、string、IRouteLocation 或 Error 类型
+ */
+export type IGuardReturn = undefined | boolean | string | IRouteLocation | Error;
+
+/**
+ * 导航守卫函数类型
+ * 用于在路由导航过程中进行自定义逻辑处理
+ * @param to 目标路由位置
+ * @param from 当前路由位置（如果是初始导航，则为 null）
+ * @param next 调用以继续导航流程的函数
+ * @returns 可以返回一个值来触发错误或重定向处理
+ */
+export type INavigationGuard = (
+    to: IRouteLocation,
+    from: IRouteLocation | null,
+    next?: INavigationGuardNext
+) => IGuardReturn | Promise<IGuardReturn> | void;
