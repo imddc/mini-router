@@ -92,6 +92,14 @@ class LibRouter implements IRouter {
     }
 
     /**
+     * @description 构建路由记录列表。
+     * @returns 路由记录列表
+     */
+    private buildRouteRecords() {
+        return this.options.routes.map((r) => createRouteLocation(r.path, this.options.routes));
+    }
+
+    /**
      * @description 导航到指定的路由路径。
      * @param path 目标路由路径
      */
@@ -147,14 +155,6 @@ class LibRouter implements IRouter {
         // 4. 提供全局组件
         app.component('RouterView', RouterView);
         app.component('RouterLink', RouterLink);
-    }
-
-    /**
-     * @description 构建路由记录列表。
-     * @returns 路由记录列表
-     */
-    private buildRouteRecords() {
-        return this.options.routes.map((r) => createRouteLocation(r.path, this.options.routes));
     }
 }
 
