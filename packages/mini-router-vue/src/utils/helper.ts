@@ -11,6 +11,7 @@ const NOT_FOUND_ROUTE: IRouteLocation = {
     query: {},
     hash: '',
     matched: [],
+    component: null,
     meta: {}
 };
 
@@ -45,6 +46,7 @@ function createRouteLocation(path: string, records: IRouteRecord[]): IRouteLocat
         hash: url.hash,
         name: matchedRecord.name,
         matched: [matchedRecord],
+        component: matchedRecord.component,
         meta: matchedRecord.meta || {}
     };
 

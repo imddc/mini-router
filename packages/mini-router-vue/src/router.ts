@@ -4,14 +4,14 @@ import { RouterLink } from './components/RouterLink';
 import { RouterView } from './components/RouterView';
 import { ROUTER_KEY } from './history/common';
 import type { ILibHistory } from './history/html5';
-import type { INavigationGuard, IRouteLocation, IRouteRecord, IRouter, IRouterOptions } from './types';
+import type { INavigationGuard, IRouteLocation, IRouter, IRouterOptions } from './types';
 import { createRouteLocation, runGuardQueue } from './utils/helper';
 import { warn } from './utils/warn';
 
 class LibRouter implements IRouter {
     options: IRouterOptions;
     public currentRoute: Ref<IRouteLocation | null> = shallowRef(null);
-    public routeRecords: IRouteRecord[];
+    private routeRecords: IRouteLocation[];
     private history: ILibHistory;
 
     private beforeGuards: INavigationGuard[] = [];
@@ -22,7 +22,7 @@ class LibRouter implements IRouter {
     constructor(options: IRouterOptions) {
         this.options = options;
         this.history = options.history;
-        this.routeRecords = options.routes;
+        this.routeRecords = this.buildRouteRecords();
 
         this.history.listen((toPath) => {
             this.navigate(toPath);
@@ -113,7 +113,7 @@ class LibRouter implements IRouter {
      * @returns 路由信息对象
      */
     resolve(path: string): IRouteLocation {
-        const resolvedResult = createRouteLocation(path, this.routeRecords);
+        const resolvedResult = createRouteLocation(path, this.options.routes);
         return resolvedResult;
     }
 
@@ -125,6 +125,10 @@ class LibRouter implements IRouter {
         return this.routeRecords;
     }
 
+    /**
+     * @description 添加一个前置守卫。
+     * @param guard 前置守卫函数
+     */
     beforeEach(guard: INavigationGuard): void {
         this.beforeGuards.push(guard);
     }
@@ -143,6 +147,14 @@ class LibRouter implements IRouter {
         // 4. 提供全局组件
         app.component('RouterView', RouterView);
         app.component('RouterLink', RouterLink);
+    }
+
+    /**
+     * @description 构建路由记录列表。
+     * @returns 路由记录列表
+     */
+    private buildRouteRecords() {
+        return this.options.routes.map((r) => createRouteLocation(r.path, this.options.routes));
     }
 }
 

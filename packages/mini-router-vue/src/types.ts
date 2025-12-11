@@ -56,7 +56,8 @@ export interface IRouteNormalizedRouteRecordMatcher {
 export interface IRouteLocation {
     fullPath: string; // 完整的 URL 路径，包含查询参数和哈希值
     path: string; // 匹配的路径，例如 '/user/100'
-    name: string | undefined; // 匹配到的路由记录的 name
+    name?: string; // 匹配到的路由记录的 name
+    component: Component | null;
     params: Record<string, string | string[]>; // 路径参数，如 { id: '100' }
     query: Record<string, string | string[]>; // 查询参数，如 { tab: 'orders' }
     hash: string; // 哈希值 (URL 中的 # 部分)
@@ -80,8 +81,6 @@ export interface IRouterOptions {
 export interface IRouter {
     /** 当前激活的路由路径 (响应式) */
     currentRoute: Ref<IRouteLocation | null>;
-    /** 注册的路由配置 */
-    routeRecords: IRouteRecord[];
     /** 编程式导航方法 */
     push(path: string): void;
     /** 编程式导航方法 */

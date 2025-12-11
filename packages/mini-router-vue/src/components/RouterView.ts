@@ -15,9 +15,7 @@ const RouterView = defineComponent((_, { slots }) => {
     }
 
     const currentRoute = computed(() => router.currentRoute.value);
-    const slotContent = computed(() =>
-        normalizeSlot(slots.default, { Component: currentRoute.value?.matched[0].component })
-    );
+    const slotContent = computed(() => normalizeSlot(slots.default, { Component: currentRoute.value?.component }));
 
     const hasDefaultSlot = computed(() => !!slots.default);
 
