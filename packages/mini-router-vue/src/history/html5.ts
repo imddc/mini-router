@@ -1,3 +1,5 @@
+import { getCleanPath } from '../utils/match';
+
 enum EHistoryMode {
     Hash = 'hash',
     History = 'history'
@@ -25,10 +27,10 @@ class LibHistory implements ILibHistory {
         console.log('base => ', base);
 
         const _location = window.location.pathname + window.location.search + window.location.hash;
-        this._currentPath = this.getCleanPath(_location);
+        this._currentPath = getCleanPath(_location);
 
         window.addEventListener('popstate', () => {
-            const newPath = this.getCleanPath(window.location.pathname);
+            const newPath = getCleanPath(window.location.pathname);
             const fromPath = this._currentPath;
 
             if (newPath === fromPath) {
@@ -52,11 +54,6 @@ class LibHistory implements ILibHistory {
         return this._currentPath;
     }
 
-    public getCleanPath(path: string): string {
-        // 去掉末尾的斜杠，如果结果为空则返回根路径 '/'
-        return path.replace(/\/$/, '') || '/';
-    }
-
     private notifyListeners(to: string, from: string) {
         this.changeListeners.forEach((listener) => {
             listener(to, from);
@@ -65,7 +62,7 @@ class LibHistory implements ILibHistory {
 
     public push(path: string): void {
         const fromPath = this._currentPath;
-        const toPath = this.getCleanPath(path);
+        const toPath = getCleanPath(path);
 
         if (toPath !== fromPath) {
             window.history.pushState({}, '', toPath);
@@ -76,7 +73,7 @@ class LibHistory implements ILibHistory {
 
     public replace(path: string): void {
         const fromPath = this._currentPath;
-        const toPath = this.getCleanPath(path);
+        const toPath = getCleanPath(path);
 
         if (toPath !== fromPath) {
             window.history.replaceState({}, '', toPath);

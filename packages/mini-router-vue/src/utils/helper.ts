@@ -1,6 +1,6 @@
 import type { IGuardReturn, INavigationGuard, INavigationGuardNext, IRouteLocation, IRouteRecord } from '../types';
 import { isPromise } from '.';
-import { matchRecords } from './match';
+import { getCleanPath, matchRecords } from './match';
 
 // 默认的 404 路由位置对象
 const NOT_FOUND_ROUTE: IRouteLocation = {
@@ -21,9 +21,9 @@ const NOT_FOUND_ROUTE: IRouteLocation = {
  * @param record 路由记录
  * @returns 路由位置对象
  */
-function createRouteLocation(path: string, records: IRouteRecord[]): IRouteLocation {
+function matchRouteLocation(path: string, records: IRouteRecord[]): IRouteLocation {
     const url = new URL(path, window.location.origin);
-    const cleanPath = url.pathname.replace(/\/$/, '') || '/';
+    const cleanPath = getCleanPath(url.pathname);
 
     const matchedResult = matchRecords(cleanPath, records);
 
@@ -38,19 +38,31 @@ function createRouteLocation(path: string, records: IRouteRecord[]): IRouteLocat
         query[key] = value;
     });
 
-    const routeLocation: IRouteLocation = {
-        fullPath: path,
-        path: cleanPath,
-        params: pathParams,
-        query,
-        hash: url.hash,
-        name: matchedRecord.name,
-        matched: [matchedRecord],
-        component: matchedRecord.component,
-        meta: matchedRecord.meta || {}
-    };
+    return buildRouteLocation(matchedRecord, pathParams, query, url.hash);
+}
 
-    return routeLocation;
+/**
+ * @description 构建路由位置对象
+ * @param record 路由记录
+ * @returns 路由位置对象
+ */
+function buildRouteLocation(
+    record: IRouteRecord,
+    params: Record<string, string> = {},
+    query: Record<string, string> = {},
+    hash: string = ''
+): IRouteLocation {
+    return {
+        params,
+        query,
+        hash: hash,
+        fullPath: record.path,
+        path: record.path,
+        name: record.name,
+        matched: [],
+        component: record.component,
+        meta: record.meta || {}
+    };
 }
 
 /**
@@ -133,4 +145,4 @@ function runGuardQueue(
     });
 }
 
-export { createRouteLocation, runGuardQueue };
+export { matchRouteLocation, buildRouteLocation, runGuardQueue };
