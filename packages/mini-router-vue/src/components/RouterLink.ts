@@ -1,6 +1,6 @@
 import { computed, defineComponent, h, inject } from 'vue';
 import { ROUTER_KEY } from '../history/common';
-import { warn } from '../warn';
+import { warn } from '../utils/warn';
 
 const RouterLink = defineComponent(
     (props, { slots }) => {
