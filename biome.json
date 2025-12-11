@@ -28,6 +28,7 @@
     "javascript": {
         "formatter": {
             "indentWidth": 4,
+            "indentStyle": "space",
             "quoteStyle": "single",
             "trailingCommas": "none"
         }

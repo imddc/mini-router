@@ -16,6 +16,8 @@ router.beforeEach((to, from) => {
     console.log('beforeEach', to, from);
 });
 
+console.log('router => ', router);
+
 console.log('routes => ', router.getRoutes());
 
 console.log('router currentRoute => ', router.currentRoute);

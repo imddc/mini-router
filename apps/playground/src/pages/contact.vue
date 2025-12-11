@@ -11,9 +11,9 @@
 </template>
 
 <script setup lang="ts">
-    import { useRoute } from 'mini-router-vue';
+import { useRoute } from 'mini-router-vue';
 
-    const route = useRoute();
+const route = useRoute();
 </script>
 
 <style scoped></style>
