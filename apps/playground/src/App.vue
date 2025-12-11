@@ -10,10 +10,7 @@
             </nav>
         </header>
 
-        <section class="rounded-md bg-gray-200">
-            <h2>
-                render 1
-            </h2>
+        <section class="rounded-md p-4">
             <router-view v-slot="{ Component }">
                 <component :is="Component" />
             </router-view>
@@ -26,7 +23,9 @@ import { useRouter } from 'mini-router-vue';
 
 const router = useRouter()
 
-console.log(router.routeRecords)
+console.log('router records => ', router.routeRecords)
+
+console.log('current router', router.currentRoute)
 
 const links = [
     {
