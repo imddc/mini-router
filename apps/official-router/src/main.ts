@@ -23,3 +23,13 @@ console.log('router currentRoute => ', router.currentRoute);
 app.use(router);
 
 app.mount('#app');
+
+console.log('-----------------------');
+
+const route = {
+    path: '/about',
+    component: () => import('./pages/about.vue')
+};
+const routeLocation = router.resolve(route);
+
+console.log('resolved route location => ', routeLocation);
