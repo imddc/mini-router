@@ -18,8 +18,8 @@ const TRAILING_SLASH_RE = /\/$/;
  * @param path - 要移除斜杠的路径
  * @returns 移除末尾斜杠后的路径
  */
-const removeTrailingSlash = (path: string) => {
+function removeTrailingSlash(path: string) {
     return path.replace(TRAILING_SLASH_RE, '');
-};
+}
 
 export { stripBase, removeTrailingSlash };

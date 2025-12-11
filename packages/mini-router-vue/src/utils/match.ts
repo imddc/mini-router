@@ -42,9 +42,4 @@ function matchRecords(path: string, records: IRouteRecord[]): IRouteMatchResult 
     return null;
 }
 
-function getCleanPath(path: string): string {
-    // 去掉末尾的斜杠，如果结果为空则返回根路径 '/'
-    return path.replace(/\/$/, '') || '/';
-}
-
-export { matchRecords, getCleanPath };
+export { matchRecords };

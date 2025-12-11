@@ -1,4 +1,4 @@
-import { getCleanPath } from '../utils/match';
+import { removeTrailingSlash } from '../location';
 
 enum EHistoryMode {
     Hash = 'hash',
@@ -27,10 +27,10 @@ class LibHistory implements ILibHistory {
         console.log('base => ', base);
 
         const _location = window.location.pathname + window.location.search + window.location.hash;
-        this._currentPath = getCleanPath(_location);
+        this._currentPath = removeTrailingSlash(_location);
 
         window.addEventListener('popstate', () => {
-            const newPath = getCleanPath(window.location.pathname);
+            const newPath = removeTrailingSlash(window.location.pathname);
             const fromPath = this._currentPath;
 
             if (newPath === fromPath) {
@@ -62,7 +62,7 @@ class LibHistory implements ILibHistory {
 
     public push(path: string): void {
         const fromPath = this._currentPath;
-        const toPath = getCleanPath(path);
+        const toPath = removeTrailingSlash(path);
 
         if (toPath !== fromPath) {
             window.history.pushState({}, '', toPath);
@@ -73,7 +73,7 @@ class LibHistory implements ILibHistory {
 
     public replace(path: string): void {
         const fromPath = this._currentPath;
-        const toPath = getCleanPath(path);
+        const toPath = removeTrailingSlash(path);
 
         if (toPath !== fromPath) {
             window.history.replaceState({}, '', toPath);

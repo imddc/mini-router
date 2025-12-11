@@ -1,6 +1,7 @@
+import { removeTrailingSlash } from '../location';
 import type { IGuardReturn, INavigationGuard, INavigationGuardNext, IRouteLocation, IRouteRecord } from '../types';
 import { isPromise } from '.';
-import { getCleanPath, matchRecords } from './match';
+import { matchRecords } from './match';
 
 // 默认的 404 路由位置对象
 const NOT_FOUND_ROUTE: IRouteLocation = {
@@ -23,7 +24,7 @@ const NOT_FOUND_ROUTE: IRouteLocation = {
  */
 function matchRouteLocation(path: string, records: IRouteRecord[]): IRouteLocation {
     const url = new URL(path, window.location.origin);
-    const cleanPath = getCleanPath(url.pathname);
+    const cleanPath = removeTrailingSlash(url.pathname);
 
     const matchedResult = matchRecords(cleanPath, records);
 
