@@ -81,7 +81,7 @@ export interface IRouter {
     hasRoute(name: string): boolean;
     removeRoute(name: string): void;
 
-    isReady(): boolean;
+    isReady(): Promise<void>;
     resolve(path: string): IRouteLocation;
 }
 

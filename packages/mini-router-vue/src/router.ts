@@ -5,7 +5,7 @@ import { RouterView } from './components/RouterView';
 import { ROUTER_KEY } from './history/common';
 import type { ILibHistory } from './history/html5';
 import type { INavigationGuard, IRouteLocation, IRouteRecord, IRouter, IRouterOptions } from './types';
-import { createRouteLocation, runGuardQueue } from './utils/helper';
+import { buildRouteLocation, matchRouteLocation, runGuardQueue } from './utils/helper';
 import { warn } from './utils/warn';
 
 class LibRouter implements IRouter {
@@ -97,7 +97,7 @@ class LibRouter implements IRouter {
      * @returns 路由记录列表
      */
     private buildRouteRecords() {
-        return this.options.routes.map((r) => createRouteLocation(r.path, this.options.routes));
+        return this.options.routes.map((r) => matchRouteLocation(r.path, this.options.routes));
     }
 
     /**
@@ -122,7 +122,7 @@ class LibRouter implements IRouter {
      * @returns 路由信息对象
      */
     resolve(path: string): IRouteLocation {
-        const resolvedResult = createRouteLocation(path, this.options.routes);
+        const resolvedResult = matchRouteLocation(path, this.options.routes);
         return resolvedResult;
     }
 
@@ -160,20 +160,47 @@ class LibRouter implements IRouter {
     getRoutes() {
         return this.routeRecords;
     }
+
+    /**
+     * @description 添加一个路由记录。
+     * @param route 路由记录
+     */
     addRoute(route: IRouteRecord): void {
-        throw new Error('Method not implemented.');
+        const builtRouteLocation = buildRouteLocation(route);
+        this.routeRecords.push(builtRouteLocation);
     }
+
+    /**
+     * @description 清空路由记录列表。
+     */
     clearRoutes(): void {
-        throw new Error('Method not implemented.');
+        this.routeRecords = [];
     }
+
+    /**
+     * @description 检查路由记录列表中是否存在指定路径的路由记录。
+     * @param path 路由路径
+     * @returns 如果存在则返回 true，否则返回 false
+     */
     hasRoute(name: string): boolean {
-        throw new Error('Method not implemented.');
+        return this.routeRecords.some((record) => record.name === name);
     }
+
+    /**
+     * @description 删除路由记录列表中指定名称的路由记录。
+     * @param name 路由记录名称
+     */
     removeRoute(name: string): void {
-        throw new Error('Method not implemented.');
+        this.routeRecords = this.routeRecords.filter((record) => record.name !== name);
     }
-    isReady(): boolean {
-        throw new Error('Method not implemented.');
+
+    /**
+     * @description 检查路由是否已准备就绪。
+     * 该钩子在路由完成第一次初始路由跳转时为true， 此时所有路由已解析完毕
+     * @returns 如果路由已准备就绪则返回 true，否则返回 false
+     */
+    isReady(): Promise<void> {
+        return Promise.resolve();
     }
 
     /**
@@ -184,11 +211,23 @@ class LibRouter implements IRouter {
         this.beforeGuards.push(guard);
     }
 
+    /**
+     * @description 添加一个后置守卫。
+     * 该守卫不提供导航和next，但会提供一个figure
+     * @param guard 后置守卫函数
+     */
     afterEach(guard: INavigationGuard): void {
+        console.log(guard);
         throw new Error('Method not implemented.');
     }
 
+    /**
+     * @description 添加一个解析守卫。
+     * 该守卫在路由解析前调用
+     * @param guard 解析守卫函数
+     */
     beforeResolve(guard: INavigationGuard): void {
+        console.log(guard);
         throw new Error('Method not implemented.');
     }
 
