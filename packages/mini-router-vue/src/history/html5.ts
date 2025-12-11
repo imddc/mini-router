@@ -22,7 +22,8 @@ class LibHistory implements ILibHistory {
     constructor(base?: string) {
         console.log('base => ', base);
 
-        this._currentPath = this.getCleanPath(window.location.pathname);
+        const _location = window.location.pathname + window.location.search + window.location.hash;
+        this._currentPath = this.getCleanPath(_location);
 
         window.addEventListener('popstate', () => {
             const newPath = this.getCleanPath(window.location.pathname);
@@ -42,6 +43,7 @@ class LibHistory implements ILibHistory {
     }
 
     public getCleanPath(path: string): string {
+        // 去掉末尾的斜杠，如果结果为空则返回根路径 '/'
         return path.replace(/\/$/, '') || '/';
     }
 
