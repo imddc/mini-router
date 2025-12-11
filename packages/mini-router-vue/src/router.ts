@@ -4,142 +4,9 @@ import { RouterLink } from './components/RouterLink';
 import { RouterView } from './components/RouterView';
 import { ROUTER_KEY } from './history/common';
 import type { ILibHistory } from './history/html5';
-import type {
-    IGuardReturn,
-    INavigationGuard,
-    INavigationGuardNext,
-    IRouteLocation,
-    IRouteRecord,
-    IRouter,
-    IRouterOptions
-} from './types';
-import { isPromise } from './utils';
-import { matchRecords } from './utils/match';
-
-// 默认的 404 路由位置对象
-const NOT_FOUND_ROUTE: IRouteLocation = {
-    fullPath: '/404',
-    path: '/404',
-    name: undefined,
-    params: {},
-    query: {},
-    hash: '',
-    matched: [],
-    meta: {}
-};
-
-/**
- * @description 创建路由位置对象
- * @param path 路由路径
- * @param record 路由记录
- * @returns 路由位置对象
- */
-function createRouteLocation(path: string, records: IRouteRecord[]): IRouteLocation {
-    const url = new URL(path, window.location.origin);
-    const cleanPath = url.pathname.replace(/\/$/, '') || '/';
-
-    const matchedResult = matchRecords(cleanPath, records);
-
-    if (!matchedResult) {
-        return NOT_FOUND_ROUTE;
-    }
-
-    const { record: matchedRecord, params: pathParams } = matchedResult;
-
-    const query: Record<string, string> = {};
-    url.searchParams.forEach((value, key) => {
-        query[key] = value;
-    });
-
-    const routeLocation: IRouteLocation = {
-        fullPath: path,
-        path: cleanPath,
-        params: pathParams,
-        query,
-        hash: url.hash,
-        name: matchedRecord.name,
-        matched: [matchedRecord],
-        meta: matchedRecord.meta || {}
-    };
-
-    return routeLocation;
-}
-
-/**
- * 执行导航守卫
- * @return Promise 返回一个promise，成功是resolve(finalRoute), 失败时 reject(result)
- */
-function runGuardQueue(
-    guards: INavigationGuard[],
-    to: IRouteLocation,
-    from: IRouteLocation | null
-): Promise<IRouteLocation> {
-    return new Promise((resolve, reject) => {
-        let step = 0;
-
-        // 递归执行下一个守卫
-        function nextGuard() {
-            if (step >= guards.length) {
-                resolve(to);
-                return;
-            }
-
-            const guard = guards[step++];
-            let isNextCalled = false;
-
-            // 只能被调用一次
-            const next: INavigationGuardNext = (result) => {
-                if (isNextCalled) {
-                    console.error('[MiniRouter] next 在同一个守卫中只能被调用一次');
-                    return;
-                }
-                isNextCalled = true;
-                if (typeof result !== 'undefined') {
-                    reject(result);
-                    return;
-                }
-
-                nextGuard();
-            };
-
-            try {
-                // 得到当前守卫的返回值
-                const guardResult = guard(to, from, next);
-
-                // promise 分支
-                if (isPromise(guardResult as Promise<IGuardReturn>)) {
-                    (guardResult as Promise<IGuardReturn>)
-                        .then((resolvedValue) => {
-                            if (!isNextCalled) {
-                                next(resolvedValue);
-                            }
-                        })
-                        .catch((error) => {
-                            if (!isNextCalled) {
-                                next(error);
-                            }
-                        });
-                }
-                // 处理同步返回值
-                else if (guardResult !== undefined) {
-                    if (!isNextCalled) {
-                        next(guardResult as IGuardReturn);
-                    }
-                }
-                // 如果守卫是同步的，且没有返回值，也没有调用next(), 则停留在原地
-                else if (!isNextCalled) {
-                    next();
-                }
-            } catch (err) {
-                if (!isNextCalled) {
-                    next(err as Error);
-                }
-            }
-        }
-
-        nextGuard();
-    });
-}
+import type { INavigationGuard, IRouteLocation, IRouteRecord, IRouter, IRouterOptions } from './types';
+import { createRouteLocation, runGuardQueue } from './utils/helper';
+import { warn } from './utils/warn';
 
 class LibRouter implements IRouter {
     options: IRouterOptions;
@@ -148,6 +15,9 @@ class LibRouter implements IRouter {
     private history: ILibHistory;
 
     private beforeGuards: INavigationGuard[] = [];
+
+    // todo: 导航故障 似乎是一个新的话题，先不做
+    // private afterGuards: INavigationGuard[] = [];
 
     constructor(options: IRouterOptions) {
         this.options = options;
@@ -161,8 +31,6 @@ class LibRouter implements IRouter {
         this.navigate(this.history.currentPath);
     }
 
-    // 路由切换的核心函数：执行匹配、更新状态、并返回新的 IRouteLocation
-
     /**
      * @description 返回一个路由地址的规范化版本。
      * 同时包含一个包含任何现有 base 的 href 属性。
@@ -174,12 +42,16 @@ class LibRouter implements IRouter {
         // todo: beforeResolve 守卫
         // 添加一个导航守卫，它会在导航将要被解析之前被执行。此时所有组件都已经获取完毕，且其它导航守卫也都已经完成调用。返回一个用来移除该守卫的函数。
 
-        // 1. 生成新的 IRouteLocation 对象
-        const newRoute = createRouteLocation(path, this.routeRecords);
-        return newRoute;
+        const resolvedRoute = this.resolve(path);
+        return resolvedRoute;
     }
 
-    // 导航的核心逻辑，负责所有状态的更新
+    /**
+     * @description 导航到指定的路由路径。
+     * 触发 前置守卫 和 后置守卫
+     * @param toPath 目标路由路径
+     * @returns void
+     */
     private async navigate(toPath: string) {
         // 1. 获取 From 和 To 的 RouteLocation 对象
         const fromRoute = this.currentRoute.value;
@@ -199,7 +71,7 @@ class LibRouter implements IRouter {
         } catch (result) {
             if (result === false) {
                 // 导航中断 (next(false))，停留在原地
-                console.warn(`[MiniRouter] 导航中断: ${fromRoute?.fullPath}`);
+                warn(`[MiniRouter] 导航中断: ${fromRoute?.fullPath}`);
             } else if (typeof result === 'string' || (result as IRouteLocation)?.path) {
                 // 重定向 (next('/new') 或 next({}))
                 console.log(
@@ -219,14 +91,36 @@ class LibRouter implements IRouter {
         // 添加一个导航钩子，它会在每次导航之后被执行。返回一个用来移除该钩子的函数。
     }
 
+    /**
+     * @description 导航到指定的路由路径。
+     * @param path 目标路由路径
+     */
     push(path: string): void {
         this.history.push(path);
     }
 
+    /**
+     * @description 用新路由替换当前路由。
+     * @param path 目标路由路径
+     */
     replace(path: string): void {
         this.history.replace(path);
     }
 
+    /**
+     * @description 解析一个路由地址，返回一个包含路由信息的对象。
+     * @param path 路由路径
+     * @returns 路由信息对象
+     */
+    resolve(path: string): IRouteLocation {
+        const resolvedResult = createRouteLocation(path, this.routeRecords);
+        return resolvedResult;
+    }
+
+    /**
+     * @description 返回当前路由记录列表。
+     * @returns
+     */
     getRoutes() {
         return this.routeRecords;
     }
@@ -235,6 +129,10 @@ class LibRouter implements IRouter {
         this.beforeGuards.push(guard);
     }
 
+    /**
+     * @description 安装 Vue 插件。
+     * @param app Vue 应用实例
+     */
     install(app: App): void {
         // 1. 提供全局的 $router
         app.config.globalProperties.$router = this;
@@ -248,6 +146,11 @@ class LibRouter implements IRouter {
     }
 }
 
+/**
+ * @description 创建一个新的路由实例。
+ * @param options 路由配置选项
+ * @returns 路由实例
+ */
 function createRouter(options: IRouterOptions) {
     return new LibRouter(options);
 }
