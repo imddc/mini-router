@@ -37,7 +37,23 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  apps/official-router:
+  packages/mini-router-vue:
+    dependencies:
+      path-to-regexp:
+        specifier: ^8.3.0
+        version: 8.3.0
+      vue:
+        specifier: ^3.5.0
+        version: 3.5.25(typescript@5.9.3)
+    devDependencies:
+      tsdown:
+        specifier: ^0.17.2
+        version: 0.17.2(typescript@5.9.3)(vue-tsc@3.1.8(typescript@5.9.3))
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
+  packages/official-router-vue:
     dependencies:
       vue:
         specifier: ^3.5.25
@@ -74,17 +90,14 @@ importers:
         specifier: ^3.1.5
         version: 3.1.8(typescript@5.9.3)
 
-  apps/playground:
+  packages/playground-vue:
     dependencies:
       '@tailwindcss/vite':
         specifier: ^4.1.17
         version: 4.1.17(rolldown-vite@7.2.5(@types/node@24.10.1)(esbuild@0.25.12)(jiti@2.6.1))
       mini-router-vue:
         specifier: workspace:*
-        version: link:../../packages/mini-router-vue
-      path-to-regexp:
-        specifier: ^8.3.0
-        version: 8.3.0
+        version: link:../mini-router-vue
       tailwindcss:
         specifier: ^4.1.17
         version: 4.1.17
@@ -95,9 +108,6 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.1
-      '@types/path-to-regexp':
-        specifier: ^1.7.0
-        version: 1.7.0
       '@vitejs/plugin-vue':
         specifier: ^6.0.1
         version: 6.0.2(rolldown-vite@7.2.5(@types/node@24.10.1)(esbuild@0.25.12)(jiti@2.6.1))(vue@3.5.25(typescript@5.9.3))
@@ -116,22 +126,6 @@ importers:
       vue-tsc:
         specifier: ^3.1.4
         version: 3.1.8(typescript@5.9.3)
-
-  packages/mini-router-vue:
-    dependencies:
-      path-to-regexp:
-        specifier: ^8.3.0
-        version: 8.3.0
-      vue:
-        specifier: ^3.5.0
-        version: 3.5.25(typescript@5.9.3)
-    devDependencies:
-      tsdown:
-        specifier: ^0.17.2
-        version: 0.17.2(typescript@5.9.3)(vue-tsc@3.1.8(typescript@5.9.3))
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
 
   packages/prepare:
     dependencies:
@@ -818,10 +812,6 @@ packages:
 
   '@types/node@24.10.1':
     resolution: {integrity: sha512-GNWcUTRBgIRJD5zj+Tq0fKOJ5XZajIiBroOF0yvj2bSU1WvNdYS/dn9UxwsujGW4JX06dnHyjV2y9rRaybH0iQ==}
-
-  '@types/path-to-regexp@1.7.0':
-    resolution: {integrity: sha512-ruXmJ/6LwB5L3mxUG2z3Ovi85vH9IVubXq+S9RArvMbjhbCnSLpXs0LrHQg3f0y2tKvXhWUNv7iQDySDfHSTDw==}
-    deprecated: This is a stub types definition for path-to-regexp (https://github.com/pillarjs/path-to-regexp). path-to-regexp provides its own type definitions, so you don't need @types/path-to-regexp installed!
 
   '@vitejs/plugin-vue@6.0.2':
     resolution: {integrity: sha512-iHmwV3QcVGGvSC1BG5bZ4z6iwa1SOpAPWmnjOErd4Ske+lZua5K9TtAVdx0gMBClJ28DViCbSmZitjWZsWO3LA==}
@@ -2082,10 +2072,6 @@ snapshots:
   '@types/node@24.10.1':
     dependencies:
       undici-types: 7.16.0
-
-  '@types/path-to-regexp@1.7.0':
-    dependencies:
-      path-to-regexp: 8.3.0
 
   '@vitejs/plugin-vue@6.0.2(rolldown-vite@7.2.5(@types/node@24.10.1)(esbuild@0.25.12)(jiti@2.6.1))(vue@3.5.25(typescript@5.9.3))':
     dependencies:
