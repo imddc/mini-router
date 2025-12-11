@@ -4,17 +4,18 @@ import { RouterLink } from './components/RouterLink';
 import { RouterView } from './components/RouterView';
 import { ROUTER_KEY } from './history/common';
 import type { ILibHistory } from './history/html5';
-import type { INavigationGuard, IRouteLocation, IRouter, IRouterOptions } from './types';
+import type { INavigationGuard, IRouteLocation, IRouteRecord, IRouter, IRouterOptions } from './types';
 import { createRouteLocation, runGuardQueue } from './utils/helper';
 import { warn } from './utils/warn';
 
 class LibRouter implements IRouter {
     options: IRouterOptions;
-    public currentRoute: Ref<IRouteLocation | null> = shallowRef(null);
     private routeRecords: IRouteLocation[];
     private history: ILibHistory;
 
     private beforeGuards: INavigationGuard[] = [];
+
+    public currentRoute: Ref<IRouteLocation | null> = shallowRef(null);
 
     // todo: 导航故障 似乎是一个新的话题，先不做
     // private afterGuards: INavigationGuard[] = [];
@@ -126,11 +127,53 @@ class LibRouter implements IRouter {
     }
 
     /**
+     * @description 导航到指定的路由路径。
+     * @param delta 导航偏移量，正值表示前进，负值表示后退
+     * @returns
+     */
+    go(delta: number) {
+        return this.history.go(delta);
+    }
+
+    /**
+     * @description 导航到上一个路由记录。
+     * 等效于 go(-1)
+     * @returns
+     */
+    back() {
+        return this.go(-1);
+    }
+
+    /**
+     * @description 导航到下一个路由记录。
+     * 等效于 go(1)
+     * @returns
+     */
+    forward() {
+        return this.go(1);
+    }
+
+    /**
      * @description 返回当前路由记录列表。
      * @returns
      */
     getRoutes() {
         return this.routeRecords;
+    }
+    addRoute(route: IRouteRecord): void {
+        throw new Error('Method not implemented.');
+    }
+    clearRoutes(): void {
+        throw new Error('Method not implemented.');
+    }
+    hasRoute(name: string): boolean {
+        throw new Error('Method not implemented.');
+    }
+    removeRoute(name: string): void {
+        throw new Error('Method not implemented.');
+    }
+    isReady(): boolean {
+        throw new Error('Method not implemented.');
     }
 
     /**
@@ -139,6 +182,14 @@ class LibRouter implements IRouter {
      */
     beforeEach(guard: INavigationGuard): void {
         this.beforeGuards.push(guard);
+    }
+
+    afterEach(guard: INavigationGuard): void {
+        throw new Error('Method not implemented.');
+    }
+
+    beforeResolve(guard: INavigationGuard): void {
+        throw new Error('Method not implemented.');
     }
 
     /**

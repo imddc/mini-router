@@ -11,6 +11,8 @@ interface ILibHistory {
     push(path: string): void;
     replace(path: string): void;
     listen(listener: IListener): () => void;
+
+    go(delta: number): void;
 }
 
 class LibHistory implements ILibHistory {
@@ -36,6 +38,14 @@ class LibHistory implements ILibHistory {
             this._currentPath = newPath;
             this.notifyListeners(newPath, fromPath);
         });
+    }
+
+    /**
+     * @description 导航到指定的路径。
+     * @param delta 导航偏移量，正值表示前进，负值表示后退
+     */
+    go(delta: number) {
+        return window.history.go(delta);
     }
 
     public get currentPath(): string {

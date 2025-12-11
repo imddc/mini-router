@@ -29,25 +29,6 @@ export interface IRouteNormalizedRouteRecord {
     redirectedFrom?: string;
 }
 
-type IMatcherGuard = (to: IRouteNormalizedRouteRecord, from: IRouteNormalizedRouteRecord) => void;
-
-/**
- * @interface IRouteNormalizedRouteRecordMatcher
- * 标准化路由记录匹配器接口
- */
-export interface IRouteNormalizedRouteRecordMatcher {
-    children: IRouteNormalizedRouteRecordMatcher[];
-    components: {
-        default: Component | (() => Promise<Component>);
-    };
-    meta: Record<string, any>;
-    name?: string;
-    path: string;
-    redirect?: string;
-    updateGuards: Set<IMatcherGuard>;
-    matcher: MatchFunction<Partial<Record<string, string | string[]>>>;
-}
-
 /**
  * 路由位置对象 (RouteLocation / Route Object)
  * 这是路由器在运行时生成的、代表当前/目标状态的完整对象。
@@ -79,16 +60,29 @@ export interface IRouterOptions {
  * 路由实例接口 (Router 类对外暴露的 API)
  */
 export interface IRouter {
-    /** 当前激活的路由路径 (响应式) */
-    currentRoute: Ref<IRouteLocation | null>;
-    /** 编程式导航方法 */
     push(path: string): void;
-    /** 编程式导航方法 */
     replace(path: string): void;
-    /** Vue 插件安装方法 */
-    install(app: App): void;
 
     options: IRouterOptions;
+    install(app: App): void;
+
+    beforeEach(guard: INavigationGuard): void;
+    afterEach(guard: INavigationGuard): void;
+    beforeResolve(guard: INavigationGuard): void;
+
+    go(delta: number): void;
+    back(): void;
+    forward(): void;
+
+    currentRoute: Ref<IRouteLocation | null>;
+    addRoute(route: IRouteRecord): void;
+    clearRoutes(): void;
+    getRoutes(): IRouteLocation[];
+    hasRoute(name: string): boolean;
+    removeRoute(name: string): void;
+
+    isReady(): boolean;
+    resolve(path: string): IRouteLocation;
 }
 
 export type IHistoryLocation = string;
